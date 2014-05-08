@@ -361,6 +361,22 @@ describe('uiDateFormat', function() {
         expect(element.controller('ngModel').$viewValue).toEqual(aDate);
       });
     });
+
+    it('should not try to parse a string as a date', function() {
+      inject(function($compile, $rootScope) {
+        var format = 'DD, d MM, yy';
+        var aDate = new Date(2012,9,11);
+        var aDateString = "Thursday, 11 October, 2012";
+        var element = $compile('<input ui-date-format="' + format + '" ng-model="x"/>')($rootScope);
+        $rootScope.$digest();
+
+        element.controller('ngModel').$setViewValue(aDateString);
+        // Check that the model is updated correctly
+        expect($rootScope.x).toEqual(aDateString);
+        // Check that the $viewValue has not been altered
+        expect(element.controller('ngModel').$viewValue).toEqual(aDateString);
+      });
+    });
   });
 
   describe('with uiDateConfig', function() {
